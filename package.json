@@ -1,15 +1,26 @@
 {
-  "name": "nodejs",
+
+  "name": "student-database",
+
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+
+  "description": "A simple system to keep track of students in a school",
+
+  "main": "server.js",
+
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+
+    "start": "node server.js"
+
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+
   "dependencies": {
-    "@types/node": "^22.13.11"
+
+    "express": "^4.18.2",
+
+    "mysql": "^2.18.1"
+
   }
+
 }
+

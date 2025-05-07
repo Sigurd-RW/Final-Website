@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Update Student</title>
+</head>
+<body>
+
+  <h1>Update Student Information</h1>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const studentId = params.get('id'); 
+
+    if (!studentId) {
+      document.write("<p>Error: No student ID provided.</p>");
+    } else {
+      document.write(`
+        <form action="/update/${studentId}" method="POST">
+
+          <label for="name">Name:</label><br/>
+          <input type="text" id="name" name="name" required><br/><br/>
+
+          <label for="email">Email:</label><br/>
+          <input type="email" id="email" name="email" required><br/><br/>
+
+          <label for="course">Course:</label><br/>
+          <input type="text" id="course" name="course" required><br/><br/>
+
+          <button type="submit">Update Student</button>
+        </form>
+      `);
+    }
+  </script>
+
+  <br/>
+  <a href="/">Back to Home</a>
+
+</body>
+</html>
