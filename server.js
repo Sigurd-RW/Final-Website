@@ -25,21 +25,23 @@ app.post('/add', (req, res) => {
   });
 });
 
+// GET all students
 app.get('/students', (req, res) => {
   const sql = 'SELECT * FROM students';
   db.query(sql, (err, rows) => {
     if (err) {
       console.error('Error fetching students:', err);
-      return res.send('An error occurred while fetching students.');
+      return res.status(500).json({ error: 'Database error' });
     }
-
+    
     let html = `<html><head><title>Student List</title></head><body>
     <h1>Students</h1>
     <a href="/">Back to Home</a>
     <table border="1" cellpadding="5" cellspacing="0">
       <thead>
         <tr>
-          <th>ID</th><th>Name</th><th>Email</th><th>Course</th><th>Actions</th>
+          <th>ID</th><th>Name</th><th>Email</th><th>Major</th>
+          <th>Year</th><th>GPA</th><th>Standing</th><th>Actions</th>
         </tr>
       </thead>
       <tbody>`;
@@ -56,7 +58,9 @@ app.get('/students', (req, res) => {
           <td>${student.class_standing}</td>
           <td>
             <a href="/update.html?id=${student.id}">Update</a> |
-            <a href="/delete/${student.id}">Delete</a>
+            <form style="display:inline" method="POST" action="/delete/${student.id}">
+              <button type="submit">Delete</button>
+            </form>
           </td>
         </tr>`;
     });
@@ -66,27 +70,42 @@ app.get('/students', (req, res) => {
   });
 });
 
-app.get('/delete/:id', (req, res) => {
-  const { id } = req.params;
+// GET single student
+app.get('/students/:id', (req, res) => {
+  const sql = 'SELECT * FROM students WHERE id = ?';
+  db.query(sql, [req.params.id], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+    res.json(results[0]);
+  });
+});
+
+// DELETE student
+app.post('/delete/:id', (req, res) => {
   const sql = 'DELETE FROM students WHERE id = ?';
-  db.query(sql, [id], (err, result) => {
+  db.query(sql, [req.params.id], (err, result) => {
     if (err) {
       console.error('Error deleting student:', err);
-      return res.send('An error occurred while deleting the student.');
+      return res.status(500).json({ error: 'Database error' });
     }
     res.redirect('/students');
   });
 });
 
+// UPDATE student
 app.post('/update/:id', (req, res) => {
   const { id } = req.params;
-  const { name, email, course } = req.body;
-  const sql = 'UPDATE students SET name = ?, email = ?, course = ? WHERE id = ?';
+  const { first_name, last_name, email, enrollment_year, major, gpa, class_standing } = req.body;
+  const sql = 'UPDATE students SET first_name = ?, last_name = ?, email = ?, enrollment_year = ?, major = ?, gpa = ?, class_standing = ? WHERE id = ?';
 
-  db.query(sql, [name, email, course, id], (err, result) => {
+  db.query(sql, [first_name, last_name, email, enrollment_year, major, gpa, class_standing, id], (err, result) => {
     if (err) {
       console.error('Error updating student:', err);
-      return res.send('An error occurred while updating the student.');
+      return res.status(500).json({ error: 'Database error' });
     }
     res.redirect('/students');
   });
