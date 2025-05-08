@@ -102,7 +102,7 @@ app.post('/update/:student_id', (req, res) => {
   const { first_name, last_name, email, enrollment_year, major, gpa, class_standing } = req.body;
   const sql = 'UPDATE students SET first_name = ?, last_name = ?, email = ?, enrollment_year = ?, major = ?, gpa = ?, class_standing = ? WHERE student_id = ?';
 
-  db.query(sql, [first_name, last_name, email, enrollment_year, major, gpa, class_standing, id], (err, result) => {
+  db.query(sql, [first_name, last_name, email, enrollment_year, major, gpa, class_standing, student_id], (err, result) => {
     if (err) {
       console.error('Error updating student:', err);
       return res.status(500).json({ error: 'Database error' });
