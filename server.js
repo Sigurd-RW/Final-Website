@@ -70,7 +70,7 @@ app.get('/students', (req, res) => {
     <div class="container">
     <a href="/">← Back to Home</a>
     <form method="GET" action="/students">
-      <label>Filter by Major:</label>
+      <label>Search by Major:</label>
       <input type="text" name="major" value="${major || ''}"/>
       <label>Class Standing:</label>
       <select name="class_standing">
@@ -82,6 +82,7 @@ app.get('/students', (req, res) => {
       </select>
       <label>Sort By:</label>
       <select name="sort_by">
+        <option value="student_id"${sort_by === 'student_id' ? ' selected' : ''}>Student ID</option>
         <option value="last_name"${sort_by === 'last_name' ? ' selected' : ''}>Last Name</option>
         <option value="first_name"${sort_by === 'first_name' ? ' selected' : ''}>First Name</option>
         <option value="gpa"${sort_by === 'gpa' ? ' selected' : ''}>GPA</option>
@@ -102,6 +103,7 @@ app.get('/students', (req, res) => {
         </tr>
       </thead>
       <tbody>`;
+
 
     rows.forEach(student => {
       html += `

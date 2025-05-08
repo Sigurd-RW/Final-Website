@@ -68,7 +68,7 @@ a:hover {
 /* Title styling */
 h1 {
   text-align: center;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 30px;
 }
 
@@ -109,7 +109,7 @@ button:hover {
   background-color: #2980b9;
 }
 
-/* Responsive tweaks */
+
 @media (max-width: 600px) {
   table, thead, tbody, th, td, tr {
     display: block;
