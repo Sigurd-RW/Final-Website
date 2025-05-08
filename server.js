@@ -10,7 +10,7 @@ app.use(express.json());
 
 // Middleware to check if user is signed up
 const checkAuth = (req, res, next) => {
-  if (req.path === '/signup' || req.path === '/signup.html') {
+  if (req.path === '/signup' || req.path === '/signup.html' || req.path === '/signup') {
     return next();
   }
   
@@ -19,8 +19,9 @@ const checkAuth = (req, res, next) => {
   res.redirect('/signup.html');
 };
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files after auth check
 app.use(checkAuth);
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.redirect('/signup.html');
