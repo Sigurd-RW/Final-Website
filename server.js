@@ -7,10 +7,23 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Middleware to check if user is signed up
+const checkAuth = (req, res, next) => {
+  if (req.path === '/signup' || req.path === '/signup.html') {
+    return next();
+  }
+  
+  // Here you would normally check session/auth
+  // For now, we'll redirect everything to signup
+  res.redirect('/signup.html');
+};
+
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(checkAuth);
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
+  res.redirect('/signup.html');
 });
 
 app.get('/home', (req, res) => {
@@ -29,7 +42,7 @@ app.post('/signup', (req, res) => {
   // Sanitize the username
   const sanitizedUsername = validator.escape(username);
 
-  res.redirect('/home');
+  res.redirect('/index.html');
 });
 
 app.post('/add', (req, res) => {
