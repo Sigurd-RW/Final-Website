@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,16 +10,20 @@
     <h1>Sign Up</h1>
   </header>
   <div class="container">
-    <form action="/signup" method="POST">
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
+    <form action="/signup" method="POST" class="form">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input class="form-control" type="email" id="email" name="email" required>
+      </div>
 
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input class="form-control" type="text" id="username" name="username" required>
+      </div>
 
-      <button type="submit">Sign Up</button>
+      <button class="btn" type="submit">Sign Up</button>
     </form>
-    <a href="/">← Back to Home</a>
+    <a href="/" class="back-link">← Back to Home</a>
   </div>
 </body>
 </html>
