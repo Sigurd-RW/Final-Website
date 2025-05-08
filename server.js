@@ -13,10 +13,10 @@ app.get('/', (req, res) => {
 });
 
 app.post('/add', (req, res) => {
-  const { id, name, email, course } = req.body;
-  const sql = 'INSERT INTO students (id, name, email, course) VALUES (?, ?, ?, ?)';
+  const { student_id, first_name, last_name, email, enrollment_year, major, gpa, class_standing } = req.body;
+  const sql = 'INSERT INTO students (student_id, first_name, last_name, email, enrollment_year, major, gpa, class_standing) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
-  db.query(sql, [id, name, email, course], (err, result) => {
+  db.query(sql, [student_id, first_name, last_name, email, enrollment_year, major, gpa, class_standing], (err, result) => {
     if (err) {
       console.error('Error adding student:', err);
       return res.send('An error occurred while adding student.');
@@ -47,10 +47,13 @@ app.get('/students', (req, res) => {
     rows.forEach(student => {
       html += `
         <tr>
-          <td>${student.id}</td>
-          <td>${student.name}</td>
+          <td>${student.student_id}</td>
+          <td>${student.first_name} ${student.last_name}</td>
           <td>${student.email}</td>
-          <td>${student.course}</td>
+          <td>${student.major}</td>
+          <td>${student.enrollment_year}</td>
+          <td>${student.gpa}</td>
+          <td>${student.class_standing}</td>
           <td>
             <a href="/update.html?id=${student.id}">Update</a> |
             <a href="/delete/${student.id}">Delete</a>
