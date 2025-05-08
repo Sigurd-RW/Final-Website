@@ -60,10 +60,16 @@ app.get('/students', (req, res) => {
       return res.status(500).json({ error: 'Database error' });
     }
 
-    let html = `<html><head><title>Student List</title></head><body>
-    <h1>Students</h1>
-    <a href="/">Back to Home</a>
-    <form method="GET" action="/students" style="margin: 20px 0;">
+    let html = `<html><head>
+    <title>Student List</title>
+    <link rel="stylesheet" href="style.css">
+    </head><body>
+    <header>
+      <h1>Student List</h1>
+    </header>
+    <div class="container">
+    <a href="/">← Back to Home</a>
+    <form method="GET" action="/students">
       <label>Filter by Major:</label>
       <input type="text" name="major" value="${major || ''}"/>
       <label>Class Standing:</label>
@@ -116,7 +122,7 @@ app.get('/students', (req, res) => {
         </tr>`;
     });
 
-    html += `</tbody></table></body></html>`;
+    html += `</tbody></table></div></body></html>`;
     res.send(html);
   });
 });
