@@ -10,6 +10,10 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
+});
+
+app.get('/home', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -25,13 +29,7 @@ app.post('/signup', (req, res) => {
   // Sanitize the username
   const sanitizedUsername = validator.escape(username);
 
-  // Respond with sanitized data
-  res.send(`
-    <h2>Signup Successful!</h2>
-    <p>Email: ${email}</p>
-    <p>Sanitized Username: ${sanitizedUsername}</p>
-    <a href="/">Go back</a>
-  `);
+  res.redirect('/home');
 });
 
 app.post('/add', (req, res) => {
