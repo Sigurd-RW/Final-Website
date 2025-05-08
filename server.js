@@ -57,8 +57,8 @@ app.get('/students', (req, res) => {
           <td>${student.gpa}</td>
           <td>${student.class_standing}</td>
           <td>
-            <a href="/update.html?id=${student.id}">Update</a> |
-            <form style="display:inline" method="POST" action="/delete/${student.id}">
+            <a href="/update.html?id=${student.student_id}">Update</a> |
+            <form style="display:inline" method="POST" action="/delete/${student.student_id}">
               <button type="submit">Delete</button>
             </form>
           </td>
@@ -85,9 +85,9 @@ app.get('/students/:id', (req, res) => {
 });
 
 // DELETE student
-app.post('/delete/:id', (req, res) => {
-  const sql = 'DELETE FROM students WHERE id = ?';
-  db.query(sql, [req.params.id], (err, result) => {
+app.post('/delete/:student_id', (req, res) => {
+  const sql = 'DELETE FROM students WHERE student_id = ?';
+  db.query(sql, [req.params.student_id], (err, result) => {
     if (err) {
       console.error('Error deleting student:', err);
       return res.status(500).json({ error: 'Database error' });
@@ -97,10 +97,10 @@ app.post('/delete/:id', (req, res) => {
 });
 
 // UPDATE student
-app.post('/update/:id', (req, res) => {
-  const { id } = req.params;
+app.post('/update/:student_id', (req, res) => {
+  const { student_id } = req.params;
   const { first_name, last_name, email, enrollment_year, major, gpa, class_standing } = req.body;
-  const sql = 'UPDATE students SET first_name = ?, last_name = ?, email = ?, enrollment_year = ?, major = ?, gpa = ?, class_standing = ? WHERE id = ?';
+  const sql = 'UPDATE students SET first_name = ?, last_name = ?, email = ?, enrollment_year = ?, major = ?, gpa = ?, class_standing = ? WHERE student_id = ?';
 
   db.query(sql, [first_name, last_name, email, enrollment_year, major, gpa, class_standing, id], (err, result) => {
     if (err) {
