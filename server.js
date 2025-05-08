@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const db = require('./models/db');
+const validator = require('validator');
 
 const app = express();
 
@@ -10,6 +11,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// POST route to handle form submission
+app.post('/signup', (req, res) => {
+  const { email, username } = req.body;
+
+  // Validate the email
+  if (!validator.isEmail(email)) {
+    return res.status(400).send(`<h2>Error: Invalid email address. Please go back and try again.</h2>`);
+  }
+
+  // Sanitize the username
+  const sanitizedUsername = validator.escape(username);
+
+  // Respond with sanitized data
+  res.send(`
+    <h2>Signup Successful!</h2>
+    <p>Email: ${email}</p>
+    <p>Sanitized Username: ${sanitizedUsername}</p>
+    <a href="/">Go back</a>
+  `);
 });
 
 app.post('/add', (req, res) => {
