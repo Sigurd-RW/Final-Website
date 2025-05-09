@@ -30,4 +30,5 @@ my-app/ – (Not used in current backend setup, may contain frontend experiments
 
 package.json – Project metadata and dependencies
 
-
+The user must first create an account before they are able to access the registry. If you already have an account, then you must log in. Either method will take you to the registry where you have the option to create, review, update, or delete entries in the school's registry.
+The
