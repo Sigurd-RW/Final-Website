@@ -1,16 +1,16 @@
-1. Clone the repository or unzip the project folder:
+Clone the repository or unzip the project folder:
 git clone https://github.com/Sigurd-RW/Final-Website.git
 or unzip FinalWebsite.zip
 
-2. Navigate to the project directory:
+Navigate to the project directory:
 cd FinalWebsite/Final
 
-3. Install Dependencies:
+Install Dependencies:
 npm install express 
 npm install mysql2
 npm install validator
 
-For running the application, ensure your MySQL database is running and update the models/db.js file with your database credentials.
+To run the application, ensure your MySQL database is running and update the models/db.js file with your database credentials.
 
 node server.js
 
