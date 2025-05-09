@@ -1,6 +1,6 @@
 1. Clone the repository or unzip the project folder:
 git clone https://github.com/Sigurd-RW/Final-Website.git
-# or unzip FinalWebsite.zip
+or unzip FinalWebsite.zip
 
 2. Navigate to the project directory:
 cd FinalWebsite/Final
