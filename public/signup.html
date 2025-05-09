@@ -4,26 +4,51 @@
   <meta charset="UTF-8">
   <title>Sign Up</title>
   <link rel="stylesheet" href="style.css">
+  <script>
+    function validateForm(event) {
+      const email = document.getElementById('email').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      if (!email) {
+        alert("Email is required.");
+        event.preventDefault();
+        return false;
+      }
+      if (!username) {
+        alert("Username is required.");
+        event.preventDefault();
+        return false;
+      }
+      if (!password) {
+        alert("Password is required.");
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+  </script>
 </head>
 <body>
   <header>
     <h1>Sign Up</h1>
   </header>
   <div class="container">
-    <form action="/signup" method="POST" class="form">
+    <form action="/signup" method="POST" onsubmit="return validateForm(event);">
       <div class="form-group">
         <label for="email">Email:</label>
-        <input class="form-control" type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" required>
       </div>
-
       <div class="form-group">
         <label for="username">Username:</label>
-        <input class="form-control" type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" required>
       </div>
-
-      <button class="btn" type="submit">Sign Up</button>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit">Sign Up</button>
     </form>
-    <a href="/" class="back-link">← Back to Home</a>
+    <a href="/login.html">Already have an account? Log In</a>
   </div>
 </body>
 </html>

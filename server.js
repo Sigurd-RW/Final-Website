@@ -4,57 +4,55 @@ const db = require('./models/db');
 const validator = require('validator');
 
 const app = express();
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Middleware to check if user is signed up
-const checkAuth = (req, res, next) => {
-  if (req.path === '/signup' || req.path === '/signup.html') {
-    return next();
-  }
-  
-  // Here you would normally check session/auth
-  // For now, we'll redirect everything to signup
-  res.redirect('/signup.html');
-};
-
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(checkAuth);
 
 app.get('/', (req, res) => {
-  res.redirect('/signup.html');
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 
-app.get('/home', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// POST route to handle form submission
 app.post('/signup', (req, res) => {
-  const { email, username } = req.body;
-
-  // Validate the email
+  const { email, username, password } = req.body;
   if (!validator.isEmail(email)) {
-    return res.status(400).send(`<h2>Error: Invalid email address. Please go back and try again.</h2>`);
+    return res.status(400).send('<h2>Invalid email</h2>');
+  }
+  if (!username) {
+    return res.status(400).send('<h2>Username cannot be empty</h2>');
+  }
+  if (!password) {
+    return res.status(400).send('<h2>Password cannot be empty</h2>');
   }
 
-  // Sanitize the username
   const sanitizedUsername = validator.escape(username);
+  const sanitizedPassword = validator.escape(password);
 
-  res.redirect('/index.html');
+  const sql = 'INSERT INTO users (email, username, password) VALUES (?, ?, ?)';
+  db.query(sql, [email, sanitizedUsername, sanitizedPassword], (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('<h2>There was an error connecting to the database. Please try again later.</h2>');
+    }
+    res.redirect('/students');
+  });
 });
 
-app.post('/add', (req, res) => {
-  const { student_id, first_name, last_name, email, enrollment_year, major, gpa, class_standing } = req.body;
-  const sql = 'INSERT INTO students (student_id, first_name, last_name, email, enrollment_year, major, gpa, class_standing) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-
-  db.query(sql, [student_id, first_name, last_name, email, enrollment_year, major, gpa, class_standing], (err, result) => {
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  const sql = 'SELECT * FROM users WHERE email = ?';
+  db.query(sql, [email], (err, results) => {
     if (err) {
-      console.error('Error adding student:', err);
-      return res.send('An error occurred while adding student.');
+      console.error(err);
+      return res.status(500).send('<h2>There was an error connecting to the database. Please try again later.</h2>');
     }
-    res.redirect('/');
+    if (results.length === 0) {
+      return res.status(400).send('<h2>Email not found. Please sign up.</h2>');
+    }
+    const user = results[0];
+    if (password !== user.password) {
+      return res.status(400).send('<h2>Incorrect password.</h2>');
+    }
+    res.redirect('/students');
   });
 });
 
@@ -101,7 +99,7 @@ app.get('/students', (req, res) => {
       <h1>Student List</h1>
     </header>
     <div class="container">
-    <a href="/">← Back to Home</a>
+        <a href="/">← Back to Home</a>
     <form method="GET" action="/students">
       <label>Search by Major:</label>
       <input type="text" name="major" value="${major || ''}"/>
@@ -126,6 +124,7 @@ app.get('/students', (req, res) => {
         <option value="DESC"${order === 'DESC' ? ' selected' : ''}>Descending</option>
       </select>
       <button type="submit">Apply</button>
+      <a href="/add.html" class="button">Register Student</a>
     </form>
 
     <table border="1" cellpadding="5" cellspacing="0">
@@ -184,6 +183,33 @@ app.post('/delete/:student_id', (req, res) => {
     if (err) {
       console.error('Error deleting student:', err);
       return res.status(500).json({ error: 'Database error' });
+    }
+    res.redirect('/students');
+  });
+});
+
+//Add student
+app.post('/add', (req, res) => {
+  const { first_name, last_name, email, enrollment_year, major, gpa, class_standing } = req.body;
+
+  if (!first_name || !last_name || !email || !enrollment_year || !major || !gpa || !class_standing) {
+    return res.status(400).send('<h2>All fields are required.</h2>');
+  }
+
+  if (!validator.isEmail(email)) {
+    return res.status(400).send('<h2>Invalid email format.</h2>');
+  }
+
+  const sql = `
+    INSERT INTO students (first_name, last_name, email, enrollment_year, major, gpa, class_standing)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+  const values = [first_name, last_name, email, enrollment_year, major, gpa, class_standing];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error adding student:', err);
+      return res.status(500).send('<h2>Database error. Please try again later.</h2>');
     }
     res.redirect('/students');
   });
